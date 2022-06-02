@@ -1,5 +1,6 @@
 import smbus
 from threading import Thread
+from time import sleep
 from math import pi, floor, atan2
 
 class Hmc:
@@ -83,6 +84,7 @@ class Hmc:
     def run(self):
         while True:
             self.compass_data['compass_heading'] = self.heading()
+            sleep(0.02)
 
     def get_compass_heading(self):
         compass_data = self.compass_data

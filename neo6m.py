@@ -49,7 +49,7 @@ if __name__ == '__main__':
 			data = neo6m.get_gps_data()
 			if data['nsat'] != 0 and data['heading'] != float("NaN"):
 				print(data)
-			sleep(0.5)
+			sleep(0.02)
 	except KeyboardInterrupt:
 		print("\nUser Interrupt")
 		exit()

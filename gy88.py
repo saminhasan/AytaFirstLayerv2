@@ -10,10 +10,10 @@ class GY88:
 		self.mpu = Mpu(0x68)
 		self.hmc = Hmc()
 		self.bmp = Bmp(0x77)
-		self.thread = Thread(target=self.run)
-		self.thread.daemon = True
-		self.thread.start()
-
+		#self.thread = Thread(target=self.run)
+		#self.thread.daemon = True
+		#self.thread.start()
+	'''
 	def run(self):
 		while True:
 			self.gy88_data['imu'] = self.mpu.get_mpu_data()
@@ -21,8 +21,12 @@ class GY88:
 			self.gy88_data['barometer'] = self.bmp.get_barometer_data()
 			#print(self.gy88_data)
 			time.sleep(0.01)
+	'''
 
 	def get_all_data(self):
+		self.gy88_data['imu'] = self.mpu.get_mpu_data()
+		self.gy88_data['compass'] = self.hmc.get_compass_heading()
+		self.gy88_data['barometer'] = self.bmp.get_barometer_data()
 		gy88_data = self.gy88_data
 		self.gy88_data = {'imu' : None, 'compass' : None, 'barometer' : None}
 		#print(gy88_data)
