@@ -1,6 +1,5 @@
-
 import smbus
-import math
+from math import pow
 from time import sleep
 from threading import Thread
 class Bmp:
@@ -136,10 +135,10 @@ class Bmp:
         B5 = 0
         actual_temp = 0.0
 
-        X1 = ((UT - self.calAC6) * self.calAC5) / math.pow(2, 15)
-        X2 = (self.calMC * math.pow(2, 11)) / (X1 + self.calMD)
+        X1 = ((UT - self.calAC6) * self.calAC5) / pow(2, 15)
+        X2 = (self.calMC * pow(2, 11)) / (X1 + self.calMD)
         B5 = X1 + X2
-        actual_temp = ((B5 + 8) / math.pow(2, 4)) / 10
+        actual_temp = ((B5 + 8) / pow(2, 4)) / 10
 
         return actual_temp
 
@@ -163,20 +162,20 @@ class Bmp:
 
         # Not sure if these calculations should be here, maybe they could be
         # removed?
-        X1 = ((UT - self.calAC6) * self.calAC5) / math.pow(2, 15)
-        X2 = (self.calMC * math.pow(2, 11)) / (X1 + self.calMD)
+        X1 = ((UT - self.calAC6) * self.calAC5) / pow(2, 15)
+        X2 = (self.calMC * pow(2, 11)) / (X1 + self.calMD)
         B5 = X1 + X2
 
-        # Todo: change math.pow cals to constants
+        # Todo: change pow cals to constants
         B6 = B5 - 4000
-        X1 = (self.calB2 * (B6 * B6 / math.pow(2, 12))) / math.pow(2, 11)
-        X2 = self.calAC2 * B6 / math.pow(2, 11)
+        X1 = (self.calB2 * (B6 * B6 / pow(2, 12))) / pow(2, 11)
+        X2 = self.calAC2 * B6 / pow(2, 11)
         X3 = X1 + X2
         B3 = (((self.calAC1 * 4 + int(X3)) << self.mode) + 2) / 4
-        X1 = self.calAC3 * B6 / math.pow(2, 13)
-        X2 = (self.calB1 * (B6 * B6 / math.pow(2, 12))) / math.pow(2, 16)
-        X3 = ((X1 + X2) + 2) / math.pow(2, 2)
-        B4 = self.calAC4 * (X3 + 32768) / math.pow(2,15)
+        X1 = self.calAC3 * B6 / pow(2, 13)
+        X2 = (self.calB1 * (B6 * B6 / pow(2, 12))) / pow(2, 16)
+        X3 = ((X1 + X2) + 2) / pow(2, 2)
+        B4 = self.calAC4 * (X3 + 32768) / pow(2,15)
         B7 = (UP - B3) * (50000 >> self.mode)
 
         if B7 < 0x80000000:
@@ -184,10 +183,10 @@ class Bmp:
         else:
             pressure = (B7 / B4) * 2
 
-        X1 = (pressure / math.pow(2, 8)) * (pressure / math.pow(2, 8))
-        X1 = (X1 * 3038) / math.pow(2, 16)
-        X2 = (-7357 * pressure) / math.pow(2, 16)
-        pressure = pressure + (X1 + X2 + 3791) / math.pow(2, 4)
+        X1 = (pressure / pow(2, 8)) * (pressure / pow(2, 8))
+        X1 = (X1 * 3038) / pow(2, 16)
+        X2 = (-7357 * pressure) / pow(2, 16)
+        pressure = pressure + (X1 + X2 + 3791) / pow(2, 4)
 
         return pressure
 
@@ -204,7 +203,7 @@ class Bmp:
         altitude = 0.0
         pressure = float(self.get_pressure())
 
-        altitude = 44330.0 * (1.0 - math.pow(pressure / sea_level_pressure, 0.00019029495))
+        altitude = 44330.0 * (1.0 - pow(pressure / sea_level_pressure, 0.00019029495))
 
         return altitude
 
@@ -214,7 +213,7 @@ class Bmp:
             self.barometer_data['altitude'] = self.get_altitude()
             self.barometer_data['temperature'] = self.get_temp()
 
-    def get_all_data(self):
+    def get_barometer_data(self):
         barometer_data = self.barometer_data
         self.barometer_data = {'temperature':float('Nan'), 'pressure':float('Nan'), 'altitude':float('Nan')}
         return barometer_data
@@ -223,8 +222,8 @@ if __name__ == '__main__':
     try:
         bmp = Bmp(0x77)
         while True:
-                data = bmp.get_all_data()
-                if True: #not any (math.isnan(value) for value in data.values()):
+                data = bmp.get_barometer_data()
+                if True:
                     print("Altitude : ", data['altitude'], "Pressure : ", data['pressure'], "Temperature : ", data['temperature'])
                     sleep(1.0)
     except KeyboardInterrupt:

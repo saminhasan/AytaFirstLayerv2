@@ -1,7 +1,6 @@
 import smbus
-import math
-import sys
 from threading import Thread
+from math import pi, floor, atan2
 
 class Hmc:
 
@@ -24,7 +23,7 @@ class Hmc:
         (degrees, minutes) = declination
         self.__declDegrees = degrees
         self.__declMinutes = minutes
-        self.__declination = (degrees + minutes / 60) * math.pi / 180
+        self.__declination = (degrees + minutes / 60) * pi / 180
 
         (reg, self.__scale) = self.__scales[gauss]
         #self.bus.write_byte_data(self.address, 0x00, 0x37)
@@ -61,23 +60,23 @@ class Hmc:
 
     def heading(self):
         (x, y, z) = self.axes()
-        headingRad = math.atan2(y, x)
+        headingRad = atan2(y, x)
         headingRad += self.__declination
 
         # Correct for reversed heading
         if headingRad < 0:
-            headingRad += 2 * math.pi
+            headingRad += 2 * pi
 
         # Check for wrap and compensate
-        elif headingRad > 2 * math.pi:
-            headingRad -= 2 * math.pi
+        elif headingRad > 2 * pi:
+            headingRad -= 2 * pi
 
         # Convert to degrees from radians
-        headingDeg = headingRad * 180 / math.pi
+        headingDeg = headingRad * 180 / pi
         return headingDeg
 
     def degrees(self, headingDeg):
-        degrees = math.floor(headingDeg)
+        degrees = floor(headingDeg)
         minutes = round((headingDeg - degrees) * 60)
         return (degrees, minutes)
 

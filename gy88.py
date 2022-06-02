@@ -10,7 +10,7 @@ class GY88:
 		self.bmp = Bmp(0x77)
 		self.start = time.perf_counter()
 	def get_all_data(self):
-		return[self.mpu.get_all_data(), self.hmc.heading(), self.bmp.get_all_data()]
+		return[self.mpu.get_mpu_data(), self.hmc.get_compass_heading(), self.bmp.get_barometer_data()]
 
 if __name__ == '__main__':
 	try:

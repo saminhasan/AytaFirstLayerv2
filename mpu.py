@@ -217,11 +217,8 @@ if __name__ == '__main__':
 		mpu = Mpu(0x68)
 		while True:
 			data = mpu.get_mpu_data()
-			#accel_data = data[0]
-			#gyro_data = data[1]
-			#print(' ax : ', accel_data['x'], ' ay : ', accel_data['y'], ' az : ', accel_data['z'], 'gx : ', gyro_data['x'], 'gy : ', gyro_data['y'], 'gz : ', gyro_data['z'])
 			print(data)
-			sleep(1)
+			sleep(1.0)
 	except KeyboardInterrupt:
 		print("\nUser Interrupt")
 		exit()

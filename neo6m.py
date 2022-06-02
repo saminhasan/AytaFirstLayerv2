@@ -1,4 +1,3 @@
-from time import sleep
 from gps import*
 from threading import Thread
 
@@ -43,6 +42,7 @@ class GPS:
 
 
 if __name__ == '__main__':
+	from time import sleep
 	try:
 		neo6m = GPS()
 		while True:
