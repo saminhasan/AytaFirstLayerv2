@@ -206,7 +206,7 @@ class Mpu:
             self.imu_data['gy'] = gyro['y']
             self.imu_data['gz'] = gyro['z']
 
-    def get_all_data(self):
+    def get_mpu_data(self):
         imu_data = self.imu_data
         self.imu_data = {'ax' : float("NaN"), 'ay' : float("NaN") , 'az' : float("NaN"), 'gx' : float("NaN"), 'gy' : float("NaN") , 'gz' : float("NaN")}
         return imu_data
@@ -216,7 +216,7 @@ if __name__ == '__main__':
 	mpu = Mpu(0x68)
 	try:
 		while True:
-			data = mpu.get_all_data()
+			data = mpu.get_mpu_data()
 			#accel_data = data[0]
 			#gyro_data = data[1]
 			#print(' ax : ', accel_data['x'], ' ay : ', accel_data['y'], ' az : ', accel_data['z'], 'gx : ', gyro_data['x'], 'gy : ', gyro_data['y'], 'gz : ', gyro_data['z'])
