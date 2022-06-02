@@ -1,8 +1,9 @@
 import smbus
 from threading import Thread
-from time import sleep
-class Mpu:
+from time import time, sleep
 
+
+class Mpu:
     # Global Variables
     GRAVITIY_MS2 = 9.80665
     address = None
@@ -52,7 +53,7 @@ class Mpu:
         self.bus = smbus.SMBus(bus)
         # Wake up the MPU-6050 since it starts in sleep mode
         self.bus.write_byte_data(self.address, self.PWR_MGMT_1, 0x00)
-        self.imu_data = {'ax' : float("NaN"), 'ay' : float("NaN") , 'az' : float("NaN"), 'gx' : float("NaN"), 'gy' : float("NaN") , 'gz' : float("NaN")}
+        self.imu_data = { 'imu_timestamp' : float("NaN"), 'ax' : float("NaN"), 'ay' : float("NaN") , 'az' : float("NaN"), 'gx' : float("NaN"), 'gy' : float("NaN") , 'gz' : float("NaN")}
         self.thread = Thread(target=self.run)
         self.thread.daemon = True
         self.thread.start()
@@ -196,6 +197,7 @@ class Mpu:
 
     def run(self):
         while True:
+            self.imu_data['imu_timestamp'] = time()
             accel = self.get_accel_data()
             gyro = self.get_gyro_data()
             self.imu_data['ax'] = accel['x']
@@ -208,12 +210,12 @@ class Mpu:
 
     def get_mpu_data(self):
         imu_data = self.imu_data
-        self.imu_data = {'ax' : float("NaN"), 'ay' : float("NaN") , 'az' : float("NaN"), 'gx' : float("NaN"), 'gy' : float("NaN") , 'gz' : float("NaN")}
+        #self.imu_data = {'imu_timestamp' : float("NaN"),'ax' : float("NaN"), 'ay' : float("NaN") , 'az' : float("NaN"), 'gx' : float("NaN"), 'gy' : float("NaN") , 'gz' : float("NaN")}
         return imu_data
 
 
 if __name__ == '__main__':
-	from time import sleep
+
 	try:
 		mpu = Mpu(0x68)
 		while True:

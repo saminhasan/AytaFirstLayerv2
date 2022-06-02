@@ -1,6 +1,6 @@
 import smbus
 from threading import Thread
-from time import sleep
+from time import time, sleep
 from math import pi, floor, atan2
 
 class Hmc:
@@ -17,7 +17,7 @@ class Hmc:
     }
 
     def __init__(self, port=1, address=0x1E, gauss=1.3, declination=(0,0)):
-        self.compass_data = {'compass_heading' : float("NaN")}
+        self.compass_data = {'compass_timestamp' : float("NaN"),'compass_heading' : float("NaN")}
         self.bus = smbus.SMBus(port)
         self.address = address
 
@@ -83,12 +83,13 @@ class Hmc:
 
     def run(self):
         while True:
+            self.compass_data['compass_timestamp'] = time()
             self.compass_data['compass_heading'] = self.heading()
             sleep(0.02)
 
     def get_compass_heading(self):
         compass_data = self.compass_data
-        self.compass_data = {'compass_heading' : float("NaN")}
+        #self.compass_data = {'compass_heading' : float("NaN")}
         return compass_data
 
     def __str__(self):

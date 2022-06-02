@@ -1,6 +1,6 @@
 import smbus
 from math import pow
-from time import sleep
+from time import time,sleep
 from threading import Thread
 
 
@@ -46,7 +46,7 @@ class Bmp:
 
         # Get the calibration data from the BMP180
         self.read_calibration_data()
-        self.barometer_data = {'temperature':float('Nan'), 'pressure':float('Nan'), 'altitude':float('Nan')}
+        self.barometer_data = {'barometer_timestamp' : float('nan'), 'temperature' : float('nan'), 'pressure':float('nan'), 'altitude':float('nan')}
         self.thread = Thread(target=self.run)
         self.thread.daemon = True
         self.thread.start()
@@ -211,6 +211,7 @@ class Bmp:
 
     def run(self):
         while True:
+            self.barometer_data['barometer_timestamp'] = time()
             self.barometer_data['pressure'] = self.get_pressure()
             self.barometer_data['altitude'] = self.get_altitude()
             self.barometer_data['temperature'] = self.get_temp()
@@ -218,7 +219,7 @@ class Bmp:
 
     def get_barometer_data(self):
         barometer_data = self.barometer_data
-        self.barometer_data = {'temperature':float('Nan'), 'pressure':float('Nan'), 'altitude':float('Nan')}
+        #self.barometer_data = {'temperature':float('Nan'), 'pressure':float('Nan'), 'altitude':float('Nan')}
         return barometer_data
 
 if __name__ == '__main__':
@@ -227,7 +228,7 @@ if __name__ == '__main__':
         while True:
                 data = bmp.get_barometer_data()
                 if True:
-                    print("Altitude : ", data['altitude'], "Pressure : ", data['pressure'], "Temperature : ", data['temperature'])
+                    print(data)
                     sleep(1.0)
     except KeyboardInterrupt:
             print("\nUser Interrupt")
