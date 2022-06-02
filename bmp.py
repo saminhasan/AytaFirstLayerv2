@@ -2,7 +2,7 @@
 import smbus
 import math
 from time import sleep
-
+from threading import Thread
 class Bmp:
     # Global variables
     address = None
@@ -45,7 +45,10 @@ class Bmp:
 
         # Get the calibration data from the BMP180
         self.read_calibration_data()
-
+        self.barometer_data = {'temperature':float('Nan'), 'pressure':float('Nan'), 'altitude':float('Nan')}
+        self.thread = Thread(target=self.run)
+        self.thread.daemon = True
+        self.thread.start()
     # I2C methods
 
     def read_signed_16_bit(self, register):
@@ -205,5 +208,25 @@ class Bmp:
 
         return altitude
 
+    def run(self):
+        while True:
+            self.barometer_data['pressure'] = self.get_pressure()
+            self.barometer_data['altitude'] = self.get_altitude()
+            self.barometer_data['temperature'] = self.get_temp()
+
     def get_all_data(self):
-        return [self.get_altitude(), self.get_altitude(), self.get_temp()]
+        barometer_data = self.barometer_data
+        self.barometer_data = {'temperature':float('Nan'), 'pressure':float('Nan'), 'altitude':float('Nan')}
+        return barometer_data
+
+if __name__ == '__main__':
+    try:
+        bmp = Bmp(0x77)
+        while True:
+                data = bmp.get_all_data()
+                if True: #not any (math.isnan(value) for value in data.values()):
+                    print("Altitude : ", data['altitude'], "Pressure : ", data['pressure'], "Temperature : ", data['temperature'])
+                    sleep(1.0)
+    except KeyboardInterrupt:
+            print("\nUser Interrupt")
+            exit()

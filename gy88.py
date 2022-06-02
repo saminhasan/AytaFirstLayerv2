@@ -13,8 +13,6 @@ class GY88:
 		return[self.mpu.get_all_data(), self.hmc.heading(), self.bmp.get_all_data()]
 
 if __name__ == '__main__':
-	timer = []
-	start = time.time()
 	try:
 		#mpu = Mpu(0x68)
 		# http://magnetic-declination.com/Great%20Britain%20(UK)/Harrogate#
@@ -26,11 +24,11 @@ if __name__ == '__main__':
 			#print("IMU (ax, ay, az), (gx, gy, gz) : ", mpu.get_all_data())
 			#print("Compass (Mintue, Second): " , str(hmc.degrees(hmc.heading())))
 			#print("Barometer (Temperature, Pressure, Altitude) : ",  bmp.get_temp(),  bmp.get_pressure(),bmp.get_altitude())
-			print(gy88.get_all_data())
+			data = gy88.get_all_data()
+			print(data)
 			end  = time.perf_counter()
 			print(" frequency : ", 1.0/(end- start))
-			timer.append(end- start)
+			break
 	except KeyboardInterrupt:
 		print("User Interrupt")
-		print(timer)
 		exit()

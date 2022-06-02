@@ -1,7 +1,7 @@
 import smbus
 import math
-import time
 import sys
+from threading import Thread
 
 class Hmc:
 
@@ -17,6 +17,7 @@ class Hmc:
     }
 
     def __init__(self, port=1, address=0x1E, gauss=1.3, declination=(0,0)):
+        self.compass_data = {'compass_heading' : float("NaN")}
         self.bus = smbus.SMBus(port)
         self.address = address
 
@@ -32,6 +33,9 @@ class Hmc:
         self.bus.write_byte_data(self.address, 0x00, 0x70) # 8 Average, 15 Hz, normal measurement
         self.bus.write_byte_data(self.address, 0x01, reg << 5) # Scale
         self.bus.write_byte_data(self.address, 0x02, 0x00) # Continuous measurement
+        self.thread = Thread(target=self.run)
+        self.thread.daemon = True
+        self.thread.start()
 
     def declination(self):
         return (self.__declDegrees, self.__declMinutes)
@@ -77,6 +81,15 @@ class Hmc:
         minutes = round((headingDeg - degrees) * 60)
         return (degrees, minutes)
 
+    def run(self):
+        while True:
+            self.compass_data['compass_heading'] = self.heading()
+
+    def get_compass_heading(self):
+        compass_data = self.compass_data
+        self.compass_data = {'compass_heading' : float("NaN")}
+        return compass_data
+
     def __str__(self):
         (x, y, z) = self.axes()
         return "Axis X: " + str(x) + "\n" \
@@ -84,3 +97,16 @@ class Hmc:
                "Axis Z: " + str(z) + "\n" \
                "Declination: " + self.degrees(self.declination()) + "\n" \
                "Heading: " + self.degrees(self.heading()) + "\n"
+
+
+if __name__ == '__main__':
+    from time import sleep
+    try:
+        hmc = Hmc()
+        while True:
+            data = hmc.get_compass_heading()
+            print(data)
+            sleep(1.0)
+    except KeyboardInterrupt:
+                print("\nUser Interrupt")
+                exit()

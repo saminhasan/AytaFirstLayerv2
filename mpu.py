@@ -1,5 +1,6 @@
 import smbus
-import time
+from time import sleep
+from threading import Thread
 
 class Mpu:
 
@@ -52,7 +53,10 @@ class Mpu:
         self.bus = smbus.SMBus(bus)
         # Wake up the MPU-6050 since it starts in sleep mode
         self.bus.write_byte_data(self.address, self.PWR_MGMT_1, 0x00)
-
+        self.imu_data = {'ax' : float("NaN"), 'ay' : float("NaN") , 'az' : float("NaN"), 'gx' : float("NaN"), 'gy' : float("NaN") , 'gz' : float("NaN")}
+        self.thread = Thread(target=self.run)
+        self.thread.daemon = True
+        self.thread.start()
     # I2C communication methods
 
     def read_i2c_word(self, register):
@@ -191,9 +195,33 @@ class Mpu:
 
         return {'x': x, 'y': y, 'z': z}
 
+    def run(self):
+        while True:
+            accel = self.get_accel_data()
+            gyro = self.get_gyro_data()
+            self.imu_data['ax'] = accel['x']
+            self.imu_data['ay'] = accel['y']
+            self.imu_data['az'] = accel['z']
+            self.imu_data['gx'] = gyro['x']
+            self.imu_data['gy'] = gyro['y']
+            self.imu_data['gz'] = gyro['z']
+
     def get_all_data(self):
+        imu_data = self.imu_data
+        self.imu_data = {'ax' : float("NaN"), 'ay' : float("NaN") , 'az' : float("NaN"), 'gx' : float("NaN"), 'gy' : float("NaN") , 'gz' : float("NaN")}
+        return imu_data
 
-        accel = self.get_accel_data()
-        gyro = self.get_gyro_data()
 
-        return [accel, gyro]
+if __name__ == '__main__':
+	mpu = Mpu(0x68)
+	try:
+		while True:
+			data = mpu.get_all_data()
+			#accel_data = data[0]
+			#gyro_data = data[1]
+			#print(' ax : ', accel_data['x'], ' ay : ', accel_data['y'], ' az : ', accel_data['z'], 'gx : ', gyro_data['x'], 'gy : ', gyro_data['y'], 'gz : ', gyro_data['z'])
+			print(data)
+			sleep(1)
+	except KeyboardInterrupt:
+		print("\nUser Interrupt")
+		exit()
