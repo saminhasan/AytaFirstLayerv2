@@ -1,5 +1,4 @@
 import smbus
-from time import sleep
 from threading import Thread
 
 class Mpu:
@@ -213,8 +212,9 @@ class Mpu:
 
 
 if __name__ == '__main__':
-	mpu = Mpu(0x68)
+	from time import sleep
 	try:
+		mpu = Mpu(0x68)
 		while True:
 			data = mpu.get_mpu_data()
 			#accel_data = data[0]
