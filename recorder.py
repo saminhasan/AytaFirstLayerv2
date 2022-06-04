@@ -54,7 +54,6 @@ class Recorder:
 		dt_string = now.strftime("%Y-%m-%d-%H-%M-%S")
 		dataframe.to_csv(self.log_path + dt_string + '.csv', index=False,header=True)
 		self.init_log()
-		print(data_log)
 		return data_log
 
 	def run(self):
@@ -114,7 +113,6 @@ class Recorder:
 		self.data_log['battery_voltage'].append (battery_voltage)
 		self.data_log['heart_rate'].append (BPM)
 
-
 	def update_oled(self):
 		#  TODO : add wlan mode info
 		ip_addr = "IP : " + str(get_ip())
@@ -133,7 +131,6 @@ class Recorder:
 		recording_status = str('Device : Recording') if self.record else str('Device : IDLE')
 		self.oled.display_data = {'1': ip_addr, '2': sensor_stauts, '3': data3, '4': recording_status}
 		self.oled.show_data()
-
 
 	def calc_bpm(self, A0):
 
