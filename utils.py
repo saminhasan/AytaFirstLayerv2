@@ -45,6 +45,7 @@ def get_ip(verbose=False):
 	if verbose:
 		print("Computer Name is : " + hostname)
 		print("Computer IP Address is : " + ipaddr)
+	return ipaddr
 
 if __name__ == '__main__':
 	sensor_status = check_sensors(True)
