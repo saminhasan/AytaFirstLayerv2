@@ -46,13 +46,14 @@ class Recorder:
 		self.record = True
 		return {'status':'started'}
 
-	def stop(self):
+	def stop(self, save_log=True):
 		self.record = False
 		data_log = self.data_log
 		dataframe = pd.DataFrame([data_log])
 		now = datetime.now()
 		dt_string = now.strftime("%Y-%m-%d-%H-%M-%S")
-		dataframe.to_csv(self.log_path + dt_string + '.csv', index=False,header=True)
+		if save_log:
+			dataframe.to_csv(self.log_path + dt_string + '.csv', index=False,header=True)
 		self.init_log()
 		return data_log
 
@@ -116,20 +117,28 @@ class Recorder:
 	def update_oled(self):
 		#  TODO : add wlan mode info
 		ip_addr = "IP : " + str(get_ip())
-		#  TODO : add faulty sensor info
-		sensor_flag = all(value == True for value in check_sensors().values())
 
-		if sensor_flag:
-			sensor_stauts = "Sensors:" + str('OK')
-		else:
-			sensor_stauts = "Sensors:" + str('Fault')
-
+		network_status = ""
+		if '192.168.' in ip_addr:
+			network_status = "Device Connected"
+		elif '10.41.0.1' in ip_addr:
+			network_status = "SSID : commitup-371"
+		elif '127.0.0.1' in ip_addr:
+			network_status = "Switching Wlan mode"
 		adc_data = self.adc.get_adc_data()
 		battery_voltage = str(self.calc_battery_voltage(adc_data['A1']))
 		heart_rate = str(self.calc_bpm(adc_data['A0']))
-		data3 = "Bat:" + battery_voltage + '	' + "BPM:" + heart_rate
-		recording_status = str('Device : Recording') if self.record else str('Device : IDLE')
-		self.oled.display_data = {'1': ip_addr, '2': sensor_stauts, '3': data3, '4': recording_status}
+
+		data3 = "Batt:" + battery_voltage + '    ' + " BPM:" + heart_rate
+
+		recording_status = str('State:Rec ') if self.record else str('State:Idle')
+		#  TODO : add faulty sensor info
+		sensor_flag = all(value == True for value in check_sensors().values())
+		if sensor_flag:
+			sensor_stauts = " Log:" + str('OK')
+		else:
+			sensor_stauts = " Log:" + str('Flt')
+		self.oled.display_data = {'1': ip_addr, '2': network_status, '3': data3, '4': recording_status + sensor_stauts}
 		self.oled.show_data()
 
 	def calc_bpm(self, A0):
@@ -150,12 +159,12 @@ if __name__ == '__main__':
 		print(r.start())
 		while True:
 			sleep(1.0)
-			if (time() - start_time) > 10.0:
+			if (time() - start_time) > 3000000000000.0:
 				break
 			else:
 				pass
 		r.oled.clear_oled()
-		r.stop()
+		r.stop(save_log=False)
 	except KeyboardInterrupt:
 		r.oled.clear_oled()
 		print(r.stop())
