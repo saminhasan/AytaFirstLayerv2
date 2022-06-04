@@ -138,6 +138,7 @@ class Recorder:
 		return A0
 
 	def calc_battery_voltage(self, A1):
+		## TODO :place holder for battery_voltage calculation code
 		return A1
 
 if __name__ == '__main__':
@@ -159,4 +160,3 @@ if __name__ == '__main__':
 		r.oled.clear_oled()
 		print(r.stop())
 		sys.exit(0)
-		
