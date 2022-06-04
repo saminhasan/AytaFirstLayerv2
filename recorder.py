@@ -138,7 +138,8 @@ class Recorder:
 			sensor_stauts = " Log:" + str('OK')
 		else:
 			sensor_stauts = " Log:" + str('Flt')
-		self.oled.display_data = {'1': ip_addr, '2': network_status, '3': data3, '4': recording_status + sensor_stauts}
+		data4 = recording_status + sensor_stauts
+		self.oled.display_data = {'1': ip_addr, '2': network_status, '3': data3, '4': data4}
 		self.oled.show_data()
 
 	def calc_bpm(self, A0):
