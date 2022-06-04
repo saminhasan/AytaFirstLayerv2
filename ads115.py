@@ -32,16 +32,15 @@ class ADC:
 			self.adc_data['A2'] = values[2]
 			self.adc_data['A3'] = values[3]
 			self.adc_data['adc_timestamp'] = time()
-			sleep(0.2)
+			sleep(0.1)
 
 	def get_adc_data(self):
 		adc_data = self.adc_data
-		#self.adc_data = {'adc_timestamp' : 0.0, 'A0' : 0.0, 'A1' : 0.0, 'A2' : 0.0, 'A3' : 0.0}
 		return adc_data
 
 
 if __name__ == '__main__':
-
+	import sys
 	try:
 		adc = ADC()
 		while True:
@@ -50,4 +49,4 @@ if __name__ == '__main__':
 			sleep(1.0)
 	except KeyboardInterrupt:
 		print("\nUser Interrupt")
-		exit()
+		sys.exit(0)

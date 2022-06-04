@@ -7,10 +7,11 @@ from gy88 import GY88
 from neo6m import GPS
 from ads115 import ADC
 from ssd1306 import OLED
-from sensor_check import check_sensors
-from time import time,sleep, perf_counter
 from threading import Thread
 from datetime import datetime
+from utils import get_ip, check_sensors
+from time import time,sleep, perf_counter
+
 
 class Recorder:
 	def __init__(self):
@@ -25,17 +26,6 @@ class Recorder:
 		self.update_oled()
 		self.logging_frequency = 50.0 # Hz
 		self.logging_period = 1.0 / self.logging_frequency # s
-		'''
-		self.data_log = {
-				'timestamp':[], 'gps_timestamp': [],  'latitude': [], 'latitude_error': [], 'longitude': [], 'longitude_error': [], 'altitude': [], 'altitude_error': [],
-				'velocity': [], 'velocity_error': [],  'heading': [], 'heading_error': [], 'magnetic_declination': [], 'nsat': [],
-				'imu_timestamp': [], 'ax': [], 'ay': [], 'az': [], 'gx': [], 'gy': [], 'gz': [],
-				'compass_timestamp': [], 'compass_heading': [],
-				'barometer_timestamp': [], 'temperature': [], 'pressure': [], 'baro_alt': [],
-				'adc_timestamp': [], 'A0': [], 'A1': [], 'A2': [], 'A3': [],
-				'heart_rate' : [], 'battery_voltage' : []
-				}
-		'''
 		self.init_log()
 		self.thread = Thread(target=self.run)
 		self.thread.daemon = True
@@ -47,7 +37,7 @@ class Recorder:
 		'velocity': [], 'velocity_error': [],  'heading': [], 'heading_error': [], 'magnetic_declination': [], 'nsat': [],
 		'imu_timestamp': [], 'ax': [], 'ay': [], 'az': [], 'gx': [], 'gy': [], 'gz': [],
 		'compass_timestamp': [], 'compass_heading': [],
-		'barometer_timestamp': [], 'temperature': [], 'pressure': [], 'baro_alt': [],
+		'barometer_timestamp': [], 'temperature': [], 'pressure': [], 'barometer_altitude': [],
 		'adc_timestamp': [], 'A0': [], 'A1': [], 'A2': [], 'A3': [],
 		'heart_rate' : [], 'battery_voltage' : []
 		}
@@ -115,7 +105,7 @@ class Recorder:
 		self.data_log['barometer_timestamp'].append (gy88_data['barometer']['barometer_timestamp'])
 		self.data_log['temperature'].append (gy88_data['barometer']['temperature'])
 		self.data_log['pressure'].append (gy88_data['barometer']['pressure'])
-		self.data_log['baro_alt'].append (gy88_data['barometer']['altitude'])
+		self.data_log['barometer_altitude'].append (gy88_data['barometer']['barometer_altitude'])
 		self.data_log['adc_timestamp'].append (adc_data['adc_timestamp'])
 		self.data_log['A0'].append (adc_data['A0'])
 		self.data_log['A1'].append (adc_data['A1'])
@@ -144,11 +134,6 @@ class Recorder:
 		self.oled.display_data = {'1': ip_addr, '2': sensor_stauts, '3': data3, '4': recording_status}
 		self.oled.show_data()
 
-	def get_ip(self):
-		# TODO : add case for no network / hotspot mode
-		hostname = socket.gethostname()
-		ip_addr = socket.gethostbyname(hostname + ".local")
-		return ip_addr
 
 	def calc_bpm(self, A0):
 
@@ -176,3 +161,5 @@ if __name__ == '__main__':
 	except KeyboardInterrupt:
 		r.oled.clear_oled()
 		print(r.stop())
+		sys.exit(0)
+		

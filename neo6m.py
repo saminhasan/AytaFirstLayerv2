@@ -43,7 +43,7 @@ class GPS:
 
 
 if __name__ == '__main__':
-
+	import sys
 	try:
 		neo6m = GPS()
 		while True:
@@ -53,4 +53,4 @@ if __name__ == '__main__':
 			sleep(1.0)
 	except KeyboardInterrupt:
 		print("\nUser Interrupt")
-		exit()
+		sys.exit(0)

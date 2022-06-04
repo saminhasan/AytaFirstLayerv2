@@ -1,10 +1,11 @@
-import sys
 import board
 import digitalio
 from time import time, sleep
 import adafruit_ssd1306
 from PIL import Image, ImageDraw, ImageFont
-
+"""
+	TODO : calculate font size from number of lines -> declare self.display_data usng loops -> add loops in show_data()
+"""
 class OLED:
 	def __init__(self):
 		self.oled_reset = digitalio.DigitalInOut(board.D4)
@@ -48,7 +49,7 @@ class OLED:
 		self.oled.show()
 
 if __name__ == '__main__':
-
+	import sys
 	oled = OLED()
 	try:
 		while True:
