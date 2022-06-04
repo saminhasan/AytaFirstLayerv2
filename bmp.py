@@ -6,7 +6,7 @@ from threading import Thread
 
 class Bmp:
     # Global variables
-    address = None
+    address = 0x77
     bus = smbus.SMBus(1)
     mode = 1 # TODO: Add a way to change the mode
 
@@ -41,7 +41,7 @@ class Bmp:
     calMD = 0
 
 
-    def __init__(self, address):
+    def __init__(self, address=0x77):
         self.address = address
 
         # Get the calibration data from the BMP180

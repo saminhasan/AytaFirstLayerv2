@@ -48,7 +48,7 @@ class Mpu:
     ACCEL_CONFIG = 0x1C
     GYRO_CONFIG = 0x1B
 
-    def __init__(self, address, bus=1):
+    def __init__(self, address=0x68, bus=1):
         self.address = address
         self.bus = smbus.SMBus(bus)
         # Wake up the MPU-6050 since it starts in sleep mode
