@@ -39,11 +39,12 @@ def check_sensors(verbose=False):
 	#print(sensor_health)
 	return sensor_health
 
-def get_ip():
+def get_ip(verbose=False):
 	hostname = socket.gethostname()
 	ipaddr = socket.gethostbyname(hostname + ".local")
-	print("Computer Name is : " + hostname)
-	print("Computer IP Address is : " + ipaddr)
+	if verbose:
+		print("Computer Name is : " + hostname)
+		print("Computer IP Address is : " + ipaddr)
 
 if __name__ == '__main__':
 	sensor_status = check_sensors(True)
