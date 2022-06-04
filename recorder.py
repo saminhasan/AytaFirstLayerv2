@@ -113,11 +113,11 @@ class Recorder:
 		self.data_log['A3'].append (adc_data['A3'])
 		self.data_log['battery_voltage'].append (battery_voltage)
 		self.data_log['heart_rate'].append (BPM)
-		#self.data_log[''].append ()
-		#print(self.data_log)
+
 
 	def update_oled(self):
-		ip_addr = "IP : " + str(self.get_ip())
+		#  TODO : add wlan mode info
+		ip_addr = "IP : " + str(get_ip())
 		#  TODO : add faulty sensor info
 		sensor_flag = all(value == True for value in check_sensors().values())
 
