@@ -127,7 +127,7 @@ class Recorder:
 		elif '127.0.0.1' in ip_addr:
 			network_status = "Switching Wlan mode"
 		adc_data = self.adc.get_adc_data()
-		battery_voltage = str(self.calc_battery_voltage(adc_data['A1']))
+		battery_voltage = str(self.calc_battery_voltage(1))
 		heart_rate = str(self.calc_bpm(adc_data['A0']))
 
 		data3 = "Batt:" + battery_voltage + '    ' + " BPM:" + heart_rate
@@ -154,7 +154,8 @@ class Recorder:
 
 	def calc_battery_voltage(self, A1):
 		## TODO :place holder for battery_voltage calculation code
-		return A1
+		return self.adc.read_voltage(self, A1,gain=2/3):
+		
 
 if __name__ == '__main__':
 	print(__file__)
