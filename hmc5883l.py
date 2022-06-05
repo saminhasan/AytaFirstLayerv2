@@ -61,7 +61,10 @@ class Hmc:
 
 	def heading(self):
 		(x, y, z) = self.axes()
-		headingRad = atan2(y, x)
+		try:
+			headingRad = atan2(y, x)
+		except Exception:
+			headingRad = 0.0
 		headingRad += self.__declination
 
 		# Correct for reversed heading

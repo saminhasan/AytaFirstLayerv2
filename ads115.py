@@ -48,9 +48,9 @@ class ADC:
 			self.adc_data['adc_timestamp'] = time()
 			sleep(0.05)
 
-	def read_voltage(self, i, gain=3/2):
-		value = self.adc.read_adc(i, gain)
-		v_lim = self.scale(gain, 1.0, 16.0, 4.096, 0.256)
+	def read_voltage(self):
+		value = self.adc.read_adc(1, gain=self.GAIN)
+		v_lim = self.scale(self.GAIN, 1.0, 16.0, 4.096, 0.256)
 		voltage = self.scale(value, -32768, 32767, -v_lim, v_lim)
 		return voltage
 
@@ -73,3 +73,4 @@ if __name__ == '__main__':
 	except KeyboardInterrupt:
 		print("\nUser Interrupt")
 		sys.exit(0)
+

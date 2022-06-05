@@ -155,7 +155,7 @@ class Recorder:
 	def calc_battery_voltage(self, A1):
 		## TODO :place holder for battery_voltage calculation code
 		#print('calc_battery_voltage')
-		return round(self.adc.read_voltage(1,gain=2/3), 2)
+		return round(self.adc.read_voltage(), 2)
 
 
 if __name__ == '__main__':
