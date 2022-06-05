@@ -62,7 +62,7 @@ class Recorder:
 		oled_timer = 0.0
 		while True:
 			timestamp = perf_counter()
-			if (timestamp - oled_timer) > 2.0:
+			if (timestamp - oled_timer) > 0.5:
 				self.update_oled()
 				oled_timer = timestamp
 			if (timestamp - previous_timestamp) > self.logging_period:
@@ -131,16 +131,20 @@ class Recorder:
 		heart_rate = str(self.calc_bpm(adc_data['A0']))
 
 		data3 = "Batt:" + battery_voltage + '    ' + " BPM:" + heart_rate
-
-		recording_status = str('State:Rec ') if self.record else str('State:Idle')
+		recording_status = str('State:Idle')
+		if self.record:
+			recording_status = str('State:Rec ')
+		print(recording_status)
 		#  TODO : add faulty sensor info
 		sensor_flag = all(value == True for value in check_sensors().values())
 		if sensor_flag:
 			sensor_stauts = " Log:" + str('OK')
 		else:
 			sensor_stauts = " Log:" + str('Flt')
-		data4 = recording_status + sensor_stauts
-		self.oled.display_data = {'1': ip_addr, '2': network_status, '3': data3, '4': data4}
+		data4 = str(recording_status + sensor_stauts)
+		print(data4)
+		self.oled.display_data = {'1': ip_addr, '2': network_status, '3': data4, '4': data3}
+		sleep(0.05)
 		self.oled.show_data()
 
 	def calc_bpm(self, A0):
@@ -155,7 +159,7 @@ class Recorder:
 if __name__ == '__main__':
 	print(__file__)
 	r = Recorder()
-	sleep(5.0)
+	sleep(20.0)
 	start_time = time()
 	try:
 		print(r.start())
