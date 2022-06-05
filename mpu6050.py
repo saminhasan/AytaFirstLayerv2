@@ -206,7 +206,7 @@ class Mpu:
 			self.imu_data['gx'] = gyro['x']
 			self.imu_data['gy'] = gyro['y']
 			self.imu_data['gz'] = gyro['z']
-			sleep(0.02)
+			sleep(0.05)
 
 	def get_mpu_data(self):
 		imu_data = self.imu_data

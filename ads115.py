@@ -32,7 +32,7 @@ class ADC:
 			self.adc_data['A2'] = values[2]
 			self.adc_data['A3'] = values[3]
 			self.adc_data['adc_timestamp'] = time()
-			sleep(0.1)
+			sleep(0.05)
 
 	def get_adc_data(self):
 		adc_data = self.adc_data

@@ -85,7 +85,7 @@ class Hmc:
 		while True:
 			self.compass_data['compass_timestamp'] = time()
 			self.compass_data['compass_heading'] = self.heading()
-			sleep(0.02)
+			sleep(0.05)
 
 	def get_compass_heading(self):
 		compass_data = self.compass_data

@@ -215,7 +215,7 @@ class Bmp:
 			self.barometer_data['pressure'] = self.get_pressure()
 			self.barometer_data['barometer_altitude'] = self.get_altitude()
 			self.barometer_data['temperature'] = self.get_temp()
-			sleep(0.1)
+			sleep(0.05)
 
 	def get_barometer_data(self):
 		barometer_data = self.barometer_data

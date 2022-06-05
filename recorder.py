@@ -24,7 +24,7 @@ class Recorder:
 		self.adc = ADC()
 		self.oled = OLED()
 		self.update_oled()
-		self.logging_frequency = 50.0 # Hz
+		self.logging_frequency = 20.0 # Hz
 		self.logging_period = 1.0 / self.logging_frequency # s
 		self.init_log()
 		self.thread = Thread(target=self.run)
@@ -62,12 +62,13 @@ class Recorder:
 		oled_timer = 0.0
 		while True:
 			timestamp = perf_counter()
-			if (timestamp - oled_timer) > 1.0:
+			if (timestamp - oled_timer) > 2.0:
 				self.update_oled()
 				oled_timer = timestamp
 			if (timestamp - previous_timestamp) > self.logging_period:
 				if self.record:
 					self.log_data()
+			sleep(0.01)
 			previous_timestamp = timestamp
 
 	def log_data(self):
