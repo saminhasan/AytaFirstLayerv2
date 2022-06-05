@@ -130,11 +130,11 @@ class Recorder:
 		battery_voltage = str(self.calc_battery_voltage(1))
 		heart_rate = str(self.calc_bpm(adc_data['A0']))
 
-		data3 = "Batt:" + battery_voltage + '    ' + " BPM:" + heart_rate
+		data3 = "Batt:" + battery_voltage + ' ' + " BPM:" + heart_rate
 		recording_status = str('State:Idle')
 		if self.record:
 			recording_status = str('State:Rec ')
-		print(recording_status)
+		#print(recording_status)
 		#  TODO : add faulty sensor info
 		sensor_flag = all(value == True for value in check_sensors().values())
 		if sensor_flag:
@@ -142,7 +142,7 @@ class Recorder:
 		else:
 			sensor_stauts = " Log:" + str('Flt')
 		data4 = str(recording_status + sensor_stauts)
-		print(data4)
+		#print(data4)
 		self.oled.display_data = {'1': ip_addr, '2': network_status, '3': data4, '4': data3}
 		sleep(0.05)
 		self.oled.show_data()
@@ -154,13 +154,14 @@ class Recorder:
 
 	def calc_battery_voltage(self, A1):
 		## TODO :place holder for battery_voltage calculation code
-		return self.adc.read_voltage(self, A1,gain=2/3):
-		
+		#print('calc_battery_voltage')
+		return round(self.adc.read_voltage(1,gain=2/3), 2)
+
 
 if __name__ == '__main__':
 	print(__file__)
 	r = Recorder()
-	sleep(20.0)
+	sleep(5.0)
 	start_time = time()
 	try:
 		print(r.start())

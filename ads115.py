@@ -47,16 +47,16 @@ class ADC:
 			self.adc_data['A3'] = values[3]
 			self.adc_data['adc_timestamp'] = time()
 			sleep(0.05)
-			
-	def read_voltage(self, i,gain=self.GAIN):
-		value = self.adc.read_adc(i, gain=self.GAIN)
+
+	def read_voltage(self, i, gain=3/2):
+		value = self.adc.read_adc(i, gain)
 		v_lim = self.scale(gain, 1.0, 16.0, 4.096, 0.256)
 		voltage = self.scale(value, -32768, 32767, -v_lim, v_lim)
 		return voltage
-	
+
 	def scale(self,x, in_min, in_max, out_min, out_max):
 		return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
-	
+
 	def get_adc_data(self):
 		adc_data = self.adc_data
 		return adc_data
