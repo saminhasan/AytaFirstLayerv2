@@ -24,7 +24,7 @@ class Recorder:
 		self.adc = ADC()
 		self.oled = OLED()
 		self.update_oled()
-		self.logging_frequency = 20.0 # Hz
+		self.logging_frequency = 5.0 # Hz
 		self.logging_period = 1.0 / self.logging_frequency # s
 		self.init_log()
 		self.thread = Thread(target=self.run)
@@ -68,7 +68,7 @@ class Recorder:
 			if (timestamp - previous_timestamp) > self.logging_period:
 				if self.record:
 					self.log_data()
-			sleep(0.01)
+			sleep(0.02)
 			previous_timestamp = timestamp
 
 	def log_data(self):
@@ -79,7 +79,7 @@ class Recorder:
 		#print(gy88_data)
 		adc_data = self.adc.get_adc_data()
 		#print(adc_data)
-		battery_voltage = self.calc_battery_voltage(adc_data['A1'])
+		battery_voltage = self.calc_battery_voltage()
 		BPM = self.calc_bpm(adc_data['A0'])
 		self.data_log['gps_timestamp'].append (gps_data['gps_timestamp'])
 		self.data_log['latitude'].append (gps_data['latitude'])
@@ -127,7 +127,7 @@ class Recorder:
 		elif '127.0.0.1' in ip_addr:
 			network_status = "Switching Wlan mode"
 		adc_data = self.adc.get_adc_data()
-		battery_voltage = str(self.calc_battery_voltage(1))
+		battery_voltage = str(self.calc_battery_voltage())
 		heart_rate = str(self.calc_bpm(adc_data['A0']))
 
 		data3 = "Batt:" + battery_voltage + ' ' + " BPM:" + heart_rate
@@ -144,7 +144,6 @@ class Recorder:
 		data4 = str(recording_status + sensor_stauts)
 		#print(data4)
 		self.oled.display_data = {'1': ip_addr, '2': network_status, '3': data4, '4': data3}
-		sleep(0.05)
 		self.oled.show_data()
 
 	def calc_bpm(self, A0):
@@ -152,7 +151,7 @@ class Recorder:
 		## TODO :place holder for bpm calculation code
 		return A0
 
-	def calc_battery_voltage(self, A1):
+	def calc_battery_voltage(self):
 		## TODO :place holder for battery_voltage calculation code
 		#print('calc_battery_voltage')
 		return round(self.adc.read_voltage(), 2)
