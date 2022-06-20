@@ -1,0 +1,2 @@
+timestamp,gps_timestamp,latitude,latitude_error,longitude,longitude_error,altitude,altitude_error,velocity,velocity_error,heading,heading_error,magnetic_declination,nsat,imu_timestamp,ax,ay,az,gx,gy,gz,compass_timestamp,compass_heading,barometer_timestamp,temperature,pressure,barometer_altitude,adc_timestamp,A0,A1,A2,A3,heart_rate,battery_voltage
+[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]
